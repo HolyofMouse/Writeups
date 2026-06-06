@@ -30,7 +30,6 @@
 
 
 ![](files_photo/Silentium/gobuster_scan.png)
-![](files_photo/Silentium/gobuster_scan.png)
 
 
 5 точка входа
