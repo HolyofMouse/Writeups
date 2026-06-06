@@ -1,3 +1,4 @@
+
 1 Сколько портов TCP открыто?
 при сканировании утилитой `nmap -sS -sV -A <target-ip>` было <font color="#00b050">выявлено 3 порта 21,22,80</font>
 Сканирование машины ![[Writeups/Machine_HTB/files_photo/CAP_photo/nmap_scan_cap.png]]
