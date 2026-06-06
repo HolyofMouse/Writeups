@@ -12,8 +12,8 @@
 `<target-ip> silentium.htb` и перезапускаем сайт
 
 
-![](port_80_browser.png)
-![](working_site.png)
+![](files_photo/Silentium/port_80_browser.png)
+![](files_photo/Silentium/working_site.png)
 
 
 3 ищем с чего начать
@@ -21,7 +21,7 @@
 После того как сайт заработал идём искать почты/имена или другие данные его владельцев/менеджеров и так далее.
 
 
-![](name_leadership_on_site.png)
+![](files_photo/Silentium/name_leadership_on_site.png)
 
 
 4 сканируем сайт
@@ -29,8 +29,8 @@
 Натыкаемся на 3 человек Бена, Маркуса и Елену. Теперь идём смотреть какие пути есть у этого сайта используя команду `gobuster vhost -u "silentium.htb" -w /usr/share/wordlists/dirb/common.txt --append-domain` ищем какие пути у нас есть
 
 
-![](gobuster_scan.png)
-![](gobuster_scan.png)
+![](files_photo/Silentium/gobuster_scan.png)
+![](files_photo/Silentium/gobuster_scan.png)
 
 
 5 точка входа
@@ -38,16 +38,16 @@
 Gobuster нашёл нам один путь это `staging.silentium.htb` пробуем по нему перейти
 
 
-![](staging_error.png)
+![](files_photo/Silentium/staging_error.png)
 
 Как и с `silentium.htb` добавляем `staging.silentium.htb` в `/etc/hosts`
 
-![](staging_working.png)
-![](staging_error.png)
+![](files_photo/Silentium/staging_working.png)
+![](files_photo/Silentium/staging_error.png)
 
 Как и с `silentium.htb` добавляем `staging.silentium.htb` в `/etc/hosts`
 
-![](staging_working.png)
+![](files_photo/Silentium/staging_working.png)
 
 
 6 поиск уязвимостей
@@ -107,33 +107,33 @@ elena@silentium.htb
 пробуем подставить их в первый запрос `curl`
 
 
-![](curl_request.png)
+![](files_photo/Silentium/curl_request.png)
 
 Как видим нам откликается только почта Бена теперь подставляем полученный `temptoken` во второй запрос
 
-![](succes_curl_change_password.png)
+![](files_photo/Silentium/succes_curl_change_password.png)
 
 Как видим мы поменяли пароль Бену теперь заходим под его обновлёнными данными
 
-![](login.png)
+![](files_photo/Silentium/login.png)
 
 Видим следующий `Dashboard` просмотрев его меня заинтересовал раздел API Keys
 
-![](api_key_found.png)
-![](curl_request.png)
+![](files_photo/Silentium/api_key_found.png)
+![](files_photo/Silentium/curl_request.png)
 
 Как видим нам откликается только почта Бена теперь подставляем полученный `temptoken` во второй запрос
 
-![](succes_curl_change_password.png)
+![](files_photo/Silentium/succes_curl_change_password.png)
 
 Как видим мы поменяли пароль Бену теперь заходим под его обновлёнными данными
 
-![](login.png)
+![](files_photo/Silentium/login.png)
 
 Видим следующий `Dashboard` просмотрев его меня заинтересовал раздел API Keys
 
-![](dashboard.png)
-![](api_key_found.png)
+![](files_photo/Silentium/dashboard.png)
+![](files_photo/Silentium/api_key_found.png)
 
 Теперь вернёмся к найденным CVE а именно к `CVE-2025-59528` благодаря которой можно получить `RCE` для входа на сервер подробнее про это можно почитать тут: https://github.com/advisories/GHSA-3gcm-f6qx-ff7p
 
@@ -155,9 +155,9 @@ curl -X POST http://localhost:3000/api/v1/node-load-method/customMCP \
 для этого поднимаем слушатель на порту 4444 с помощью `nc -lvnp 4444`
 
 
-![](nc_listener.png)
+![](files_photo/Silentium/nc_listener.png)
 
-![](nc_listener.png)
+![](files_photo/Silentium/nc_listener.png)
 
 
 далее генерируем revershell для нашего POST запроса
@@ -181,42 +181,42 @@ curl -X POST http://staging.silentium.htb/api/v1/node-load-method/customMCP \
 где заменяем параметры с api ключами, ip и порт на нужные нам нажимаем Enter и получаем shell
 
 
-![](shell.png)
+![](files_photo/Silentium/shell.png)
 
 далее осматриваемся в директориях и видим что мы находимся в docker контейнере гуглим каким способом можно выбраться или какие данные можно получить из него
 
-![](list_dir.png)
+![](files_photo/Silentium/list_dir.png)
 
 К сожалению выбраться из него нельзя тогда ищем как можно найти что то полезное в этом контейнере и находим что через команду env можно вывести информацию о всех переменных окружения
 
-![](env_environment_variable.png)
+![](files_photo/Silentium/env_environment_variable.png)
 
-![](shell.png)
+![](files_photo/Silentium/shell.png)
 
 далее осматриваемся в директориях и видим что мы находимся в docker контейнере гуглим каким способом можно выбраться или какие данные можно получить из него
 
-![](list_dir.png)
+![](files_photo/Silentium/list_dir.png)
 
 К сожалению выбраться из него нельзя тогда ищем как можно найти что то полезное в этом контейнере и находим что через команду env можно вывести информацию о всех переменных окружения
 
-![](env_environment_variable.png)
+![](files_photo/Silentium/env_environment_variable.png)
 
 
 пробуем эти данные для входа в ssh и пароль `r04D!!_R4ge` подходит для ssh сессии 
 прописываем ls -la и находим первый флаг
 
 
-![](user_flag.png)
+![](files_photo/Silentium/user_flag.png)
 
 Теперь надо поднятся до root первым делом смотрим что запущено на системе с помощью `ps aux` и натыкаемся на интересную программу `gogs`
 
-![](gogs_web.png)
+![](files_photo/Silentium/gogs_web.png)
 
-![](user_flag.png)
+![](files_photo/Silentium/user_flag.png)
 
 Теперь надо поднятся до root первым делом смотрим что запущено на системе с помощью `ps aux` и натыкаемся на интересную программу `gogs`
 
-![](gogs_web.png)
+![](files_photo/Silentium/gogs_web.png)
 
 
  гуглим что это такое:
@@ -236,5 +236,5 @@ python3 exploit.py -u http://localhost:3001 -un <YOUR_USER> -pw <YOUR_PASS> -t <
 И получаем root доступ и выводим root flag:
 
 
-![](root_success.png)
-![](root_flag.png)
+![](files_photo/Silentium/root_success.png)
+![](files_photo/Silentium/root_flag.png)
