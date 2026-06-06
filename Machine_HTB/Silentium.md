@@ -114,8 +114,6 @@ elena@silentium.htb
 Видим следующий `Dashboard` просмотрев его меня заинтересовал раздел API Keys
 
 ![](files_photo/Silentium/api_key_found.png)
-![](files_photo/Silentium/curl_request.png)
-
 
 Теперь вернёмся к найденным CVE а именно к `CVE-2025-59528` благодаря которой можно получить `RCE` для входа на сервер подробнее про это можно почитать тут: https://github.com/advisories/GHSA-3gcm-f6qx-ff7p
 
